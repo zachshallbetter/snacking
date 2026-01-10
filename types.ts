@@ -1,6 +1,9 @@
+import React from "react";
+
 export interface Point {
   x: number;
   y: number;
+  dist?: number;
 }
 
 export interface Bite {
@@ -24,34 +27,34 @@ export interface Crumb {
   rotation: number;
   rotationSpeed: number;
   life: number; // 0 to 1
-  shape: 'triangle' | 'circle' | 'rect';
+  shape: "triangle" | "circle" | "rect";
 }
 
 export interface YumConfig {
   cx: number;
   cy: number;
-  maxR: number;     // The visual boundary radius
+  maxR: number; // The visual boundary radius
   minDist?: number; // Closest a bite can get to center
-  
+
   // Simulation Settings
   biteSizeScale?: number; // Multiplier for bite size (default 1)
-  interval?: number;      // Speed in ms (default 200)
-  autoEat?: boolean;      // Toggle auto-eating
-  
+  interval?: number; // Speed in ms (default 200)
+  autoEat?: boolean; // Toggle auto-eating
+
   // Physics & Visuals
-  gravity?: number;       // Downward force (default 0.1 for floaty)
-  drag?: number;          // Air resistance (default 0.98)
-  showDebug?: boolean;    // Show bite cursor
+  gravity?: number; // Downward force (default 0.1 for floaty)
+  drag?: number; // Air resistance (default 0.98)
+  showDebug?: boolean; // Show bite cursor
   showNextBitePreview?: boolean; // Toggle next bite indicator
   showStructurePreview?: boolean; // Toggle structure (islands/perimeter) view
   showOnionSkin?: boolean; // Toggle onion skin of original shape
   showColorDominance?: boolean; // Toggle color dominance visualization
   resetDuration?: number; // ms to shrink/reset
-  animateExit?: boolean;  // Toggle shrink animation on reset
+  animateExit?: boolean; // Toggle shrink animation on reset
   animateEnter?: boolean; // Toggle grow animation on spawn
-  
+
   // New Configs
-  drillInBias?: number;   // 0 (Strict Peel) to 1 (Allow Drill)
+  drillInBias?: number; // 0 (Strict Peel) to 1 (Allow Drill)
   biteRoundness?: number; // 0 (Jagged) to 1 (Smooth)
   startPointRandomness?: number; // 0 (Strict Furthest) to 1 (Random Outer)
   biteDepthVariance?: number; // 0 (Uniform) to 1 (Chaotic Depth)
@@ -94,7 +97,12 @@ export interface AppSettings {
 }
 
 // Animation Component Types
-export type AnimationShape = 'circle' | 'line' | 'rounded-rect' | 'image' | 'custom';
+export type AnimationShape =
+  | "circle"
+  | "line"
+  | "rounded-rect"
+  | "image"
+  | "custom";
 
 export interface AnimationConfig {
   shape: AnimationShape;
@@ -106,20 +114,20 @@ export interface AnimationConfig {
   imageSrc?: string; // For image eating (URL or base64 data URI)
   maskPath?: string; // SVG path for custom/image masks
   viewBox?: string; // For SVG-based shapes
-  
+
   // Animation settings
   progress?: number; // 0-1 for progress-based animations
   autoPlay?: boolean; // For loaders
   interval?: number;
   biteSizeScale?: number;
-  
+
   // Visual settings
   color?: string;
   crumbColors?: string[];
   showCrumbs?: boolean;
   gravity?: number;
   drag?: number;
-  
+
   // Bite settings
   biteRoundness?: number;
   biteDepthVariance?: number;
@@ -177,10 +185,10 @@ export interface ImageEaterProps {
     drag?: number;
     showDebug?: boolean;
     showNextBitePreview?: boolean;
-  showStructurePreview?: boolean;
-  showOnionSkin?: boolean;
-  showColorDominance?: boolean;
-  resetDuration?: number;
+    showStructurePreview?: boolean;
+    showOnionSkin?: boolean;
+    showColorDominance?: boolean;
+    resetDuration?: number;
     animateExit?: boolean;
     animateEnter?: boolean;
     drillInBias?: number;
