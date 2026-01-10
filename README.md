@@ -1,147 +1,408 @@
-# Cookie Cruncher
+# Snacking Animation Library
 
-An interactive web application where you can watch food items get "eaten" with satisfying bite animations and physics-based crumbs. Choose from cookies, cupcakes, pizza, and ice cream, then customize the experience with various settings.
+A React library for creating interactive eating animations, loaders, progress indicators, and delete animations with customizable physics and visual effects.
 
 ## Features
 
-- **Interactive Food Items**: Click on food items to watch them get eaten bite by bite
-- **Multiple Food Types**: Cookie, Cupcake, Pizza, and Ice Cream
-- **Customizable Settings**: Adjust colors, bite sizes, physics, animations, and more
-- **Auto-Eat Mode**: Watch items automatically get consumed
-- **Physics-Based Crumbs**: Realistic particle effects with gravity and drag
-- **Visual Debugging**: Toggle preview modes and debug overlays
+- 🍪 **Eating Animations** - Animate shapes being "eaten" with realistic bite patterns
+- 📊 **Progress Indicators** - Animated progress bars and circles
+- 🖼️ **Image Eating** - Apply eating effects to images using SVG masks
+- 🗑️ **Delete Animations** - Smooth delete animations with particle effects
+- ⚙️ **Highly Configurable** - Customize physics, visuals, and behavior
+- 🎨 **Flexible Styling** - Works with any styling system
 
-## Run Locally
-
-**Prerequisites:** Node.js
-
-1. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-2. Run the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-3. Open your browser to the URL shown in the terminal (typically `http://localhost:5173`)
-
-## Build for Production
+## Installation
 
 ```bash
-npm run build
+npm install @snacking/animation-library
+# or
+pnpm add @snacking/animation-library
+# or
+yarn add @snacking/animation-library
 ```
 
-The built files will be in the `dist` directory.
+## Quick Start
 
-## How It Works
+### Basic Usage
 
-### Core System
+```tsx
+import { YumItem } from '@snacking/animation-library';
 
-The app uses a grid-based structural analysis system to simulate realistic eating behavior:
+function App() {
+  return (
+    <YumItem
+      svgPath="M100,100 L200,100 L200,200 L100,200 Z"
+      viewBox="0 0 300 300"
+      colors={{
+        base: '#FF4785',
+        shadow: '#9F1239',
+        highlight: '#FFFFFF',
+        crumbs: ['#FFFFFF', '#FF4785']
+      }}
+      config={{
+        cx: 150,
+        cy: 150,
+        maxR: 150,
+        autoEat: true,
+        interval: 360
+      }}
+    />
+  );
+}
+```
 
-1. **Grid Representation**: Each food item is converted into a 10px resolution grid where each cell represents part of the food
-2. **Bite Planning**: An intelligent algorithm analyzes the remaining food structure to determine optimal bite locations
-3. **Structural Integrity**: After each bite, the system checks for disconnected "islands" that automatically crumble away
-4. **Physics Simulation**: Crumbs are generated with realistic physics (gravity, drag, rotation) for satisfying visual feedback
+### Loader Component
 
-### Bite Algorithm
+```tsx
+import { Loader } from '@snacking/animation-library';
 
-The bite planning system uses several strategies:
+function Loading() {
+  return <Loader size={100} color="#FF4785" speed={200} />;
+}
+```
 
-- **Forward Momentum**: Maintains clockwise eating pattern by looking ahead ~120 degrees
-- **Surface Detection**: Targets the outer perimeter of the remaining food mass
-- **Tip Detection**: Identifies and prioritizes peninsula-like protrusions for natural eating patterns
-- **Depth Avoidance**: Prevents "drilling" into the food by penalizing inward bites (configurable)
-- **Main Cluster Focus**: Always targets the largest connected mass, ignoring small debris
+### Progress Bar
+
+```tsx
+import { ProgressBar } from '@snacking/animation-library';
+
+function Progress() {
+  const [progress, setProgress] = useState(0.5);
+
+  return (
+    <ProgressBar
+      width={400}
+      height={24}
+      progress={progress}
+      color="#FF4785"
+      animated={true}
+    />
+  );
+}
+```
+
+### Image Eater
+
+```tsx
+import { ImageEater } from '@snacking/animation-library';
+
+function ImageAnimation() {
+  return (
+    <ImageEater
+      src="/path/to/image.png"
+      maskPath="M250.9,3.7c-.4,2.6..."
+      viewBox="0 0 612.8 626.9"
+      colors={{
+        base: '#F59E0B',
+        shadow: '#B45309',
+        highlight: '#FFFFFF',
+        crumbs: ['#EF4444', '#FEF3C7', '#F59E0B']
+      }}
+      config={{
+        cx: 306.4,
+        cy: 313.45,
+        maxR: 310,
+        autoEat: true,
+        interval: 360
+      }}
+    />
+  );
+}
+```
+
+#### Base64 Image Support
+
+The `ImageEater` component supports base64 encoded images via data URIs:
+
+```tsx
+// Using base64 data URI
+<ImageEater
+  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+  maskPath="M250.9,3.7c-.4,2.6..."
+  viewBox="0 0 612.8 626.9"
+  // ... rest of props
+/>
+```
+
+Base64 images are automatically detected and handled without CORS restrictions, making them ideal for:
+- Embedded images in applications
+- Dynamically generated images
+- Images loaded from memory/cache
+- Offline-capable applications
+
+## Components
+
+### YumItem
+
+Main component for eating animations on SVG paths.
+
+**Props:**
+- `svgPath` (string) - SVG path data
+- `viewBox` (string) - SVG viewBox
+- `colors` (object) - Color configuration
+- `config` (YumConfig) - Animation configuration
+- `children` (ReactNode) - Optional decorations
+
+### Loader
+
+Circular loader with eating animation.
+
+**Props:**
+- `size` (number) - Size in pixels (default: 100)
+- `color` (string) - Loader color (default: '#FF4785')
+- `speed` (number) - Animation speed in ms (default: 200)
+- `showCrumbs` (boolean) - Show particle effects (default: true)
+- `crumbColors` (string[]) - Crumb colors
+
+### ProgressBar
+
+Horizontal progress bar with eating animation.
+
+**Props:**
+- `width` (number | string) - Bar width
+- `height` (number) - Bar height (default: 20)
+- `progress` (number) - Progress 0-1
+- `color` (string) - Progress color
+- `backgroundColor` (string) - Background color
+- `animated` (boolean) - Use eating animation (default: true)
+- `showCrumbs` (boolean) - Show particle effects
+
+### ProgressCircle
+
+Circular progress indicator.
+
+**Props:**
+- `size` (number) - Circle size (default: 100)
+- `progress` (number) - Progress 0-1
+- `color` (string) - Progress color
+- `strokeWidth` (number) - Stroke width (default: 8)
+- `animated` (boolean) - Use eating animation
+- `showCrumbs` (boolean) - Show particle effects
+
+### ImageEater
+
+Eat images using SVG masks.
+
+**Props:**
+- `src` (string) - Image source URL
+- `maskPath` (string) - SVG path for mask
+- `viewBox` (string) - SVG viewBox
+- `colors` (object) - Color configuration
+- `config` (YumConfig) - Animation configuration
+
+## Reference Files (`ref/` Directory)
+
+The `ref/` directory contains reference assets used in the animation process, particularly for image-based eating animations.
+
+### Files
+
+- **`mask.svg`** - SVG file containing the shape path with white fill
+- **`inverted-mask.svg`** - Inverted version of the mask
+- **`contour.svg`** - Outline/contour version of the shape
+- **`image.png`** - Source image file (e.g., pizza image)
+
+### How Reference Files Are Used
+
+#### 1. **SVG Path Data**
+
+The SVG path data extracted from `mask.svg`, `inverted-mask.svg`, or `contour.svg` is used as the `maskPath` prop to define the shape boundary for eating animations.
+
+```tsx
+// Extract path from SVG file
+const maskPath = "M250.9,3.7c-.4,2.6,4.8-.6,5.1,1.9...";
+
+<ImageEater
+  src="./ref/image.png"
+  maskPath={maskPath}  // Shape boundary from ref SVG
+  viewBox="0 0 612.8 626.9"
+  // ...
+/>
+```
+
+#### 2. **Shape Boundary Definition**
+
+The path data defines where the eating animation can occur:
+
+- **Grid Analysis**: The `useYumYum` hook converts the path into a grid representation
+- **Boundary Detection**: Determines which pixels are inside vs. outside the shape
+- **Bite Planning**: Ensures bites only occur within the shape boundary
+
+```tsx
+// In ImageEater.tsx
+<path id="imageBody" d={maskPath} />  // Defines the shape
+```
+
+#### 3. **SVG Mask Creation**
+
+The path is used to create an SVG mask that reveals/hides parts of the image:
+
+```tsx
+<mask id="imageEaterMask">
+  {/* White rectangle = full visibility */}
+  <rect x="-3000" y="-3000" width="10000" height="10000" fill="white" />
+
+  {/* Black bite paths = hide eaten areas */}
+  {bites.map((bite) => (
+    <path
+      d={bite.path}
+      fill="black"
+      transform={`translate(${bite.x}, ${bite.y}) rotate(${bite.rotation})`}
+    />
+  ))}
+</mask>
+
+{/* Apply mask to image */}
+<g mask="url(#imageEaterMask)">
+  <image href={src} />
+</g>
+```
+
+#### 4. **Color Sampling**
+
+The path boundary is used to sample colors from the image for color dominance detection:
+
+- Only pixels within the shape boundary are analyzed
+- Enables targeted color detection (e.g., finding specific colored regions)
+- Used for intelligent bite placement based on color preferences
+
+#### 5. **Image Source**
+
+The `image.png` file serves as the visual content that gets "eaten":
+
+```tsx
+// In data/items.tsx
+pizzaimage: {
+  // ...
+  imageSrc: './ref/image.png',
+  isImage: true
+}
+```
+
+### Workflow
+
+1. **Extract Path**: SVG path data is extracted from `ref/mask.svg` (or similar)
+2. **Define Shape**: Path is used to define the shape boundary in components
+3. **Create Grid**: `useYumYum` converts path to a grid for analysis
+4. **Plan Bites**: Bite planning algorithm uses grid to find valid bite locations
+5. **Apply Mask**: SVG mask reveals image, hides eaten areas
+6. **Sample Colors**: Color detection samples pixels within shape boundary
+
+### Creating Custom Reference Files
+
+To create custom eating animations:
+
+1. **Create SVG**: Design your shape in an SVG editor
+2. **Extract Path**: Copy the `d` attribute from the `<path>` element
+3. **Set ViewBox**: Note the `viewBox` dimensions
+4. **Provide Image**: Add your source image file
+5. **Configure**: Set `cx`, `cy`, and `maxR` based on your shape's center and size
+
+Example:
+```tsx
+const customMaskPath = "M100,100 L200,100 L200,200 L100,200 Z"; // Square
+const customViewBox = "0 0 300 300";
+
+<ImageEater
+  src="./custom-image.png"
+  maskPath={customMaskPath}
+  viewBox={customViewBox}
+  config={{
+    cx: 150,  // Center X
+    cy: 150,  // Center Y
+    maxR: 150 // Max radius
+  }}
+/>
+```
+
+### DeleteAnimation
+
+Delete animation wrapper component.
+
+**Props:**
+- `onComplete` (function) - Callback when deletion completes
+- `duration` (number) - Animation duration in ms
+- `color` (string) - Animation color
+- `showCrumbs` (boolean) - Show particle effects
+- `children` (ReactNode) - Content to animate deletion
+
+## Hooks
+
+### useYumYum
+
+Core hook for eating animations.
+
+```tsx
+import { useYumYum } from '@snacking/animation-library';
+
+const {
+  bites,
+  crumbs,
+  triggerBite,
+  updateCrumbs,
+  isResetting,
+  scale,
+  isFinished,
+  nextBite,
+  structure
+} = useYumYum(config, svgPath, viewBox, crumbColors);
+```
+
+### useShapeEater
+
+Hook for shape-based eating animations.
+
+```tsx
+import { useShapeEater } from '@snacking/animation-library';
+
+const {
+  bites,
+  crumbs,
+  progress,
+  isFinished,
+  takeBite,
+  reset
+} = useShapeEater({
+  shape: 'circle',
+  width: 300,
+  height: 300,
+  radius: 150,
+  autoPlay: true,
+  // ... more options
+});
+```
 
 ## Configuration
 
-All settings can be adjusted in real-time via the controls panel. Each food item has default configurations that can be overridden.
+### YumConfig
 
-### Simulation Settings
+```typescript
+interface YumConfig {
+  cx: number;              // Center X
+  cy: number;              // Center Y
+  maxR: number;            // Maximum radius
+  biteSizeScale?: number;  // Bite size multiplier (default: 1)
+  interval?: number;       // Auto-eat interval in ms (default: 200)
+  autoEat?: boolean;       // Enable auto-eating (default: true)
+  gravity?: number;        // Crumb gravity (default: 0.2)
+  drag?: number;           // Air resistance (default: 0.96)
+  showDebug?: boolean;     // Show debug cursor
+  showNextBitePreview?: boolean;  // Show next bite indicator
+  showStructurePreview?: boolean; // Show structure overlay
+  showOnionSkin?: boolean; // Show original shape outline
+  resetDuration?: number;  // Reset animation duration
+  animateExit?: boolean;   // Animate on reset
+  animateEnter?: boolean;  // Animate on spawn
+  drillInBias?: number;    // 0 (peel) to 1 (drill)
+  biteRoundness?: number;  // 0 (jagged) to 1 (smooth)
+  startPointRandomness?: number;  // 0 (strict) to 1 (random)
+  biteDepthVariance?: number;    // 0 (uniform) to 1 (chaotic)
+}
+```
 
-- **Auto Eat** (`autoEat`): Toggle automatic eating mode. When enabled, bites occur automatically at the configured interval.
-- **Speed** (`interval`): Time between bites in milliseconds (50-800ms). Lower values = faster eating.
-- **Bite Size** (`biteSizeScale`): Multiplier for bite radius (0.5x - 3.0x). Larger values create bigger bites.
+## Examples
 
-### Bite Behavior
+See the `App.tsx` file for a complete example implementation.
 
-- **Drill In Bias** (`drillInBias`): Controls how much the algorithm avoids "drilling" into the food
-  - `0.0` = Strict peel mode (only surface bites)
-  - `1.0` = Allows deeper bites
-  - Default: `0.8`
+## License
 
-- **Bite Roundness** (`biteRoundness`): Controls the smoothness of bite edges
-  - `0.0` = Jagged, irregular bites
-  - `1.0` = Smooth, rounded bites
-  - Default: `0.9`
-
-- **Start Point Randomness** (`startPointRandomness`): Controls initial bite location selection
-  - `0.0` = Always starts at the furthest point from center
-  - `1.0` = Random selection from outer 50% of points
-  - Default: `0.5`
-
-- **Bite Depth Variance** (`biteDepthVariance`): Adds randomness to bite depth
-  - `0.0` = Uniform bite sizes
-  - `1.0` = Highly variable bite depths
-  - Default: `0.2`
-
-### Physics
-
-- **Gravity** (`gravity`): Downward force applied to crumbs (0.05 - 2.0)
-  - Lower values = floaty, slow-falling crumbs
-  - Higher values = fast-falling, realistic crumbs
-  - Default: `0.2`
-
-- **Air Resistance** (`drag`): Air resistance multiplier (0.80 - 0.99)
-  - Lower values = crumbs slow down faster
-  - Higher values = crumbs maintain velocity longer
-  - Default: `0.96`
-
-### Visual Options
-
-- **Onion Skin**: Shows the original food shape as a semi-transparent overlay
-- **Show Next Bite**: Displays a preview indicator where the next bite will occur
-- **Structure Preview**: Visualizes the internal structure (islands, perimeter, tips) for debugging
-- **Show Bite Cursor**: Displays debug information about bite targeting
-- **Animate Reset**: Enables shrink animation when food resets
-- **Animate Spawn**: Enables grow animation when food appears
-- **Base Color**: Customize the primary color of the food item
-
-### Reset Behavior
-
-- **Reset Duration** (`resetDuration`): Time in milliseconds for the reset animation (default: 800ms)
-- When food is nearly consumed (< 15 pixels remaining), remaining pieces automatically explode into crumbs
-- After explosion, the food automatically resets to its original state
-
-## Food Item Configuration
-
-Each food item is defined with:
-
-- **SVG Path**: The shape of the food item
-- **ViewBox**: SVG coordinate system
-- **Center Point** (`cx`, `cy`): Center coordinates for bite calculations
-- **Max Radius** (`maxR`): Visual boundary radius
-- **Colors**: Base, shadow, highlight, and crumb color palette
-- **Decorations**: Optional SVG decorations (e.g., chocolate chips, sprinkles)
-
-## JSON Export
-
-The configuration panel includes a "Show JSON" button that exports the current item configuration including all merged settings. This can be used to:
-
-- Save custom configurations
-- Share settings with others
-- Programmatically configure items
-
-## Tech Stack
-
-- React 19
-- TypeScript
-- Vite
-- Tailwind CSS
-- Lucide React (icons)
-
+MIT

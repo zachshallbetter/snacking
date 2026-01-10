@@ -1,11 +1,59 @@
 {
-  "name": "cookie-cruncher",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@snacking/animation-library",
+  "version": "1.0.0",
+  "description": "A React library for creating interactive eating animations, loaders, progress indicators, and delete animations",
   "type": "module",
+  "main": "./lib/index.ts",
+  "types": "./lib/index.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.ts",
+      "types": "./lib/index.ts"
+    },
+    "./components": {
+      "import": "./lib/index.ts",
+      "types": "./lib/index.ts"
+    },
+    "./hooks": {
+      "import": "./lib/index.ts",
+      "types": "./lib/index.ts"
+    },
+    "./types": {
+      "import": "./lib/index.ts",
+      "types": "./lib/index.ts"
+    }
+  },
+  "files": [
+    "lib",
+    "components",
+    "hooks",
+    "types",
+    "utils",
+    "README.md",
+    "EXAMPLES.md"
+  ],
+  "keywords": [
+    "react",
+    "animation",
+    "eating",
+    "loader",
+    "progress",
+    "interactive",
+    "svg",
+    "particles"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/snacking-animation-library"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:lib": "tsc && vite build --mode library",
     "preview": "vite preview"
   },
   "dependencies": {

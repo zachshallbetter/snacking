@@ -8,7 +8,7 @@ interface CrumbsProps {
   drag?: number;
 }
 
-const Crumbs: React.FC<CrumbsProps> = ({ crumbs, onUpdate, gravity = 0.2, drag = 0.96 }) => {
+export const Crumbs: React.FC<CrumbsProps> = ({ crumbs, onUpdate, gravity = 0.2, drag = 0.96 }) => {
   const requestRef = useRef<number | undefined>(undefined);
   const previousTimeRef = useRef<number | undefined>(undefined);
 

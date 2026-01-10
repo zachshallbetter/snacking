@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import YumItem from './components/YumItem';
 import { ITEMS, ItemKey } from './data/items';
 import { FoodSelector } from './components/FoodSelector';
 import { Controls } from './components/Controls';
+import { ColorDominanceControl } from './components/ColorDominanceControl';
 import { AppSettings } from './types';
+import { ImageEater } from './components/animations';
 
 export default function App() {
   const [activeItem, setActiveItem] = useState<ItemKey>('cookie');
+  const [detectedColors, setDetectedColors] = useState<Array<{ color: string, percentage: number }> | null>(null);
   
   // Customization State
   const [customSettings, setCustomSettings] = useState<AppSettings>({
@@ -20,6 +23,7 @@ export default function App() {
     showNextBitePreview: true,
     showStructurePreview: false,
     showOnionSkin: false,
+    showColorDominance: false,
     resetDuration: 800,
     animateExit: true,
     animateEnter: true,
@@ -27,10 +31,38 @@ export default function App() {
     biteRoundness: 0.9,
     startPointRandomness: 0.5,
     biteDepthVariance: 0.2,
+    randomBitePlacement: false,
+    colorDominance: {
+      enabled: false,
+      targetColor: '#FFFFFF',
+      tolerance: 0.2,
+      strength: 0.5
+    },
     showJSON: false
   });
 
   const baseItem = ITEMS[activeItem];
+  
+  // Reset detected colors when item changes
+  useEffect(() => {
+    setDetectedColors(null);
+  }, [activeItem]);
+  
+  // Auto-set target color when color dominance detects a dominant color
+  const handleColorDominanceDetected = (dominantColor: string, allColors?: Array<{ color: string, percentage: number }>) => {
+    if (customSettings.colorDominance.enabled && customSettings.colorDominance.targetColor !== dominantColor) {
+      setCustomSettings(s => ({
+        ...s,
+        colorDominance: {
+          ...s.colorDominance,
+          targetColor: dominantColor
+        }
+      }));
+    }
+    if (allColors) {
+      setDetectedColors(allColors);
+    }
+  };
   
   // Merge configurations
   const mergedColors = {
@@ -49,13 +81,16 @@ export default function App() {
       showNextBitePreview: customSettings.showNextBitePreview,
       showStructurePreview: customSettings.showStructurePreview,
       showOnionSkin: customSettings.showOnionSkin,
+      showColorDominance: customSettings.showColorDominance,
       resetDuration: customSettings.resetDuration,
       animateExit: customSettings.animateExit,
       animateEnter: customSettings.animateEnter,
       drillInBias: customSettings.drillInBias,
       biteRoundness: customSettings.biteRoundness,
       startPointRandomness: customSettings.startPointRandomness,
-      biteDepthVariance: customSettings.biteDepthVariance
+      biteDepthVariance: customSettings.biteDepthVariance,
+      randomBitePlacement: customSettings.randomBitePlacement,
+      colorDominance: customSettings.colorDominance
   };
 
   const jsonOutput = {
@@ -67,7 +102,6 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-neutral-100 font-sans">
-      
       {/* --- Main Background Canvas --- */}
       <div className="absolute inset-0 flex items-center justify-center">
           
@@ -83,16 +117,29 @@ export default function App() {
           />
 
           {/* Main Item */}
-          <div className="relative z-10 w-full max-w-[90vh] aspect-square flex items-center justify-center p-8 transition-all">
-               <YumItem 
-                  key={baseItem.id} // Re-mounts on item change
-                  svgPath={baseItem.path}
-                  viewBox={baseItem.viewBox}
-                  colors={mergedColors}
-                  config={mergedConfig}
-               >
-                  {baseItem.decorations}
-               </YumItem>
+          <div className="relative z-10 w-full flex items-center justify-center p-8 transition-all" style={{ height: '60vh' }}>
+               {(baseItem as any).isImage ? (
+                 <ImageEater
+                   key={baseItem.id}
+                   src={(baseItem as any).imageSrc || './ref/image.png'}
+                   maskPath={baseItem.path}
+                   viewBox={baseItem.viewBox}
+                   colors={mergedColors}
+                   config={mergedConfig}
+                   onColorDominanceDetected={handleColorDominanceDetected}
+                 />
+               ) : (
+                 <YumItem 
+                   key={baseItem.id} // Re-mounts on item change
+                   svgPath={baseItem.path}
+                   viewBox={baseItem.viewBox}
+                   colors={mergedColors}
+                   config={mergedConfig}
+                   onColorDominanceDetected={handleColorDominanceDetected}
+                 >
+                   {baseItem.decorations}
+                 </YumItem>
+               )}
           </div>
           
            <div className="absolute bottom-12 text-neutral-400 font-bold tracking-widest text-sm uppercase opacity-60 pointer-events-none">
@@ -111,6 +158,15 @@ export default function App() {
         mergedColors={mergedColors}
         jsonOutput={jsonOutput}
       />
+
+      {/* --- Color Dominance Control (Right, next to Controls) - Only show when enabled --- */}
+      {customSettings.colorDominance.enabled && (
+        <ColorDominanceControl 
+          settings={customSettings} 
+          setSettings={setCustomSettings}
+          detectedColors={detectedColors}
+        />
+      )}
 
     </div>
   );

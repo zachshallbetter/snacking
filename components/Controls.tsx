@@ -1,5 +1,5 @@
-import React from 'react';
-import { Settings, Code, RotateCcw, Play, Pause, Eye, EyeOff, Maximize, Minimize, Target, Map, Ghost } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Settings, Code, RotateCcw, Play, Pause, Eye, EyeOff, Maximize, Minimize, Target, Map, Ghost, Shuffle, Palette } from 'lucide-react';
 import { AppSettings } from '../types';
 
 interface ControlsProps {
@@ -10,228 +10,350 @@ interface ControlsProps {
 }
 
 export const Controls: React.FC<ControlsProps> = ({ settings, setSettings, mergedColors, jsonOutput }) => {
-  return (
-    <div className="absolute top-6 right-6 w-80 max-h-[90vh] overflow-y-auto bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 p-6 flex flex-col gap-6 z-50">
-        <div className="flex items-center gap-2 text-neutral-800 border-b border-neutral-100 pb-4">
-            <Settings size={20} />
-            <h2 className="font-bold text-lg">Configuration</h2>
-        </div>
+  const [isHovered, setIsHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-        {/* Simulation Controls */}
-        <div className="space-y-4">
+  // Handle hover with delay to prevent accidental closes
+  const handleMouseEnter = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    // Add a small delay before closing to allow movement between button and panel
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 150);
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="absolute top-6 right-6 z-50"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Trigger Button */}
+      <button
+        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-md ${
+          isHovered
+            ? 'bg-white text-blue-500 scale-110 ring-4 ring-blue-100' 
+            : 'bg-white/80 text-neutral-600 hover:bg-white hover:text-neutral-900'
+        }`}
+        title="Configuration"
+      >
+        <Settings size={20} />
+      </button>
+
+      {/* Invisible bridge to prevent gap between button and panel */}
+      {isHovered && (
+        <div 
+          className="absolute top-12 right-0 w-12 h-2"
+          onMouseEnter={handleMouseEnter}
+        />
+      )}
+
+      {/* Configuration Panel */}
+      {isHovered ? (
+        <div
+          className="absolute top-14 right-0 w-80 bg-white rounded-2xl shadow-lg border border-neutral-200/50 p-4 flex flex-col gap-3"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+        {/* Auto Eat Section */}
+        <div className="space-y-2">
             <div className="flex justify-between items-center">
-                <label className="text-sm font-semibold text-neutral-600">Auto Eat</label>
+                <label className="text-sm font-medium text-neutral-700">Auto Eat</label>
                 <button 
-                onClick={() => setSettings(s => ({...s, autoEat: !s.autoEat}))}
-                className={`p-2 rounded-lg transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-wide ${settings.autoEat ? 'bg-green-100 text-green-700' : 'bg-neutral-100 text-neutral-500'}`}
+                    onClick={() => setSettings(s => ({...s, autoEat: !s.autoEat}))}
+                    className={`px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide ${
+                        settings.autoEat 
+                            ? 'bg-green-50 text-green-700 border border-green-200' 
+                            : 'bg-neutral-50 text-neutral-500 border border-neutral-200'
+                    }`}
                 >
-                    {settings.autoEat ? <><Pause size={12}/> Running</> : <><Play size={12}/> Paused</>}
+                    {settings.autoEat ? <><Pause size={11}/> Running</> : <><Play size={11}/> Paused</>}
                 </button>
             </div>
 
             <div>
                 <div className="flex justify-between text-xs text-neutral-500 mb-1">
                     <span>Speed</span>
-                    <span>{settings.interval}ms</span>
+                    <span className="font-medium text-neutral-700">{settings.interval}ms</span>
                 </div>
                 <input 
-                type="range" 
-                min="50" max="800" step="10"
-                value={settings.interval}
-                onChange={(e) => setSettings(s => ({...s, interval: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
-                />
-            </div>
-
-                <div>
-                <div className="flex justify-between text-xs text-neutral-500 mb-1">
-                    <span>Bite Size</span>
-                    <span>{settings.biteSizeScale}x</span>
-                </div>
-                <input 
-                type="range" 
-                min="0.5" max="3.0" step="0.1"
-                value={settings.biteSizeScale}
-                onChange={(e) => setSettings(s => ({...s, biteSizeScale: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+                    type="range" 
+                    min="50" max="800" step="10"
+                    value={settings.interval}
+                    onChange={(e) => setSettings(s => ({...s, interval: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${(settings.interval - 50) / (800 - 50) * 100}%, #E5E7EB ${(settings.interval - 50) / (800 - 50) * 100}%, #E5E7EB 100%)`
+                    }}
                 />
             </div>
 
             <div>
                 <div className="flex justify-between text-xs text-neutral-500 mb-1">
-                    <span>Drill In Bias (Peel vs Drill)</span>
-                    <span>{settings.drillInBias.toFixed(1)}</span>
+                    <span>Bite Size</span>
+                    <span className="font-medium text-neutral-700">{settings.biteSizeScale}x</span>
                 </div>
                 <input 
-                type="range" 
-                min="0" max="1" step="0.1"
-                value={settings.drillInBias}
-                onChange={(e) => setSettings(s => ({...s, drillInBias: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+                    type="range" 
+                    min="0.5" max="3.0" step="0.1"
+                    value={settings.biteSizeScale}
+                    onChange={(e) => setSettings(s => ({...s, biteSizeScale: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${((settings.biteSizeScale - 0.5) / (3.0 - 0.5)) * 100}%, #E5E7EB ${((settings.biteSizeScale - 0.5) / (3.0 - 0.5)) * 100}%, #E5E7EB 100%)`
+                    }}
                 />
             </div>
 
-                <div>
+            <div>
                 <div className="flex justify-between text-xs text-neutral-500 mb-1">
-                    <span>Bite Roundness (Jagged vs Smooth)</span>
-                    <span>{settings.biteRoundness.toFixed(1)}</span>
+                    <span>Drill In Bias</span>
+                    <span className="font-medium text-neutral-700">{settings.drillInBias.toFixed(1)}</span>
                 </div>
                 <input 
-                type="range" 
-                min="0" max="1" step="0.1"
-                value={settings.biteRoundness}
-                onChange={(e) => setSettings(s => ({...s, biteRoundness: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+                    type="range" 
+                    min="0" max="1" step="0.1"
+                    value={settings.drillInBias}
+                    onChange={(e) => setSettings(s => ({...s, drillInBias: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${settings.drillInBias * 100}%, #E5E7EB ${settings.drillInBias * 100}%, #E5E7EB 100%)`
+                    }}
+                />
+            </div>
+
+            <div>
+                <div className="flex justify-between text-xs text-neutral-500 mb-1">
+                    <span>Bite Roundness</span>
+                    <span className="font-medium text-neutral-700">{settings.biteRoundness.toFixed(1)}</span>
+                </div>
+                <input 
+                    type="range" 
+                    min="0" max="1" step="0.1"
+                    value={settings.biteRoundness}
+                    onChange={(e) => setSettings(s => ({...s, biteRoundness: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${settings.biteRoundness * 100}%, #E5E7EB ${settings.biteRoundness * 100}%, #E5E7EB 100%)`
+                    }}
                 />
             </div>
 
             <div>
                 <div className="flex justify-between text-xs text-neutral-500 mb-1">
                     <span>Start Point Randomness</span>
-                    <span>{settings.startPointRandomness.toFixed(1)}</span>
+                    <span className="font-medium text-neutral-700">{settings.startPointRandomness.toFixed(1)}</span>
                 </div>
                 <input 
-                type="range" 
-                min="0" max="1" step="0.1"
-                value={settings.startPointRandomness}
-                onChange={(e) => setSettings(s => ({...s, startPointRandomness: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+                    type="range" 
+                    min="0" max="1" step="0.1"
+                    value={settings.startPointRandomness}
+                    onChange={(e) => setSettings(s => ({...s, startPointRandomness: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${settings.startPointRandomness * 100}%, #E5E7EB ${settings.startPointRandomness * 100}%, #E5E7EB 100%)`
+                    }}
                 />
             </div>
 
             <div>
                 <div className="flex justify-between text-xs text-neutral-500 mb-1">
                     <span>Bite Depth Variance</span>
-                    <span>{settings.biteDepthVariance.toFixed(1)}</span>
+                    <span className="font-medium text-neutral-700">{settings.biteDepthVariance.toFixed(1)}</span>
                 </div>
                 <input 
-                type="range" 
-                min="0" max="1" step="0.1"
-                value={settings.biteDepthVariance}
-                onChange={(e) => setSettings(s => ({...s, biteDepthVariance: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+                    type="range" 
+                    min="0" max="1" step="0.1"
+                    value={settings.biteDepthVariance}
+                    onChange={(e) => setSettings(s => ({...s, biteDepthVariance: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${settings.biteDepthVariance * 100}%, #E5E7EB ${settings.biteDepthVariance * 100}%, #E5E7EB 100%)`
+                    }}
                 />
             </div>
         </div>
 
-        {/* Physics & Visuals */}
-        <div className="space-y-4 pt-4 border-t border-neutral-100">
-                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Physics</h3>
-                
-                <div>
+        {/* Physics Section */}
+        <div className="space-y-2 pt-2 border-t border-neutral-100">
+            <div>
                 <div className="flex justify-between text-xs text-neutral-500 mb-1">
-                    <span>Gravity (Float vs Fall)</span>
-                    <span>{settings.gravity.toFixed(2)}</span>
+                    <span>Gravity</span>
+                    <span className="font-medium text-neutral-700">{settings.gravity.toFixed(2)}</span>
                 </div>
                 <input 
-                type="range" 
-                min="0.05" max="2.0" step="0.05"
-                value={settings.gravity}
-                onChange={(e) => setSettings(s => ({...s, gravity: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+                    type="range" 
+                    min="0.05" max="2.0" step="0.05"
+                    value={settings.gravity}
+                    onChange={(e) => setSettings(s => ({...s, gravity: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${((settings.gravity - 0.05) / (2.0 - 0.05)) * 100}%, #E5E7EB ${((settings.gravity - 0.05) / (2.0 - 0.05)) * 100}%, #E5E7EB 100%)`
+                    }}
                 />
-                </div>
+            </div>
 
             <div>
                 <div className="flex justify-between text-xs text-neutral-500 mb-1">
                     <span>Air Resistance</span>
-                    <span>{settings.drag.toFixed(2)}</span>
+                    <span className="font-medium text-neutral-700">{settings.drag.toFixed(2)}</span>
                 </div>
                 <input 
-                type="range" 
-                min="0.80" max="0.99" step="0.01"
-                value={settings.drag}
-                onChange={(e) => setSettings(s => ({...s, drag: Number(e.target.value)}))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+                    type="range" 
+                    min="0.80" max="0.99" step="0.01"
+                    value={settings.drag}
+                    onChange={(e) => setSettings(s => ({...s, drag: Number(e.target.value)}))}
+                    className="w-full h-1.5 bg-neutral-100 rounded-full appearance-none cursor-pointer accent-neutral-700"
+                    style={{
+                        background: `linear-gradient(to right, #525252 0%, #525252 ${((settings.drag - 0.80) / (0.99 - 0.80)) * 100}%, #E5E7EB ${((settings.drag - 0.80) / (0.99 - 0.80)) * 100}%, #E5E7EB 100%)`
+                    }}
                 />
             </div>
         </div>
 
-        {/* Debug & Appearance */}
-        <div className="space-y-4 pt-4 border-t border-neutral-100">
-                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Visuals</h3>
-                
-                <div className="flex justify-between items-center">
-                <label className="text-sm text-neutral-600">Onion Skin (Original)</label>
-                <button onClick={() => setSettings(s => ({...s, showOnionSkin: !s.showOnionSkin}))} className="text-neutral-400 hover:text-blue-500">
-                    {settings.showOnionSkin ? <Ghost size={18} className="text-blue-500"/> : <Ghost size={18} className="text-neutral-200"/>}
+        {/* Visuals Section */}
+        <div className="space-y-1.5 pt-2 border-t border-neutral-100">
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Onion Skin</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, showOnionSkin: !s.showOnionSkin}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.showOnionSkin ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    <Ghost size={16} />
                 </button>
-                </div>
+            </div>
 
-                <div className="flex justify-between items-center">
-                <label className="text-sm text-neutral-600">Show Next Bite</label>
-                <button onClick={() => setSettings(s => ({...s, showNextBitePreview: !s.showNextBitePreview}))} className="text-neutral-400 hover:text-blue-500">
-                    {settings.showNextBitePreview ? <Target size={18} className="text-blue-500"/> : <Target size={18} className="text-neutral-200"/>}
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Show Next Bite</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, showNextBitePreview: !s.showNextBitePreview}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.showNextBitePreview ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    <Target size={16} />
                 </button>
-                </div>
+            </div>
 
-                <div className="flex justify-between items-center">
-                <label className="text-sm text-neutral-600">Structure (Islands/Coast)</label>
-                <button onClick={() => setSettings(s => ({...s, showStructurePreview: !s.showStructurePreview}))} className="text-neutral-400 hover:text-blue-500">
-                    {settings.showStructurePreview ? <Map size={18} className="text-blue-500"/> : <Map size={18} className="text-neutral-200"/>}
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Structure</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, showStructurePreview: !s.showStructurePreview}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.showStructurePreview ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    <Map size={16} />
                 </button>
-                </div>
+            </div>
 
-                <div className="flex justify-between items-center">
-                <label className="text-sm text-neutral-600">Show Bite Cursor</label>
-                <button onClick={() => setSettings(s => ({...s, showDebug: !s.showDebug}))} className="text-neutral-400 hover:text-blue-500">
-                    {settings.showDebug ? <Eye size={18} className="text-blue-500"/> : <EyeOff size={18}/>}
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Show Bite Cursor</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, showDebug: !s.showDebug}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.showDebug ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    {settings.showDebug ? <Eye size={16} /> : <EyeOff size={16} />}
                 </button>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                <label className="text-sm text-neutral-600">Animate Reset (Shrink)</label>
-                <button onClick={() => setSettings(s => ({...s, animateExit: !s.animateExit}))} className="text-neutral-400 hover:text-blue-500">
-                    {settings.animateExit ? <Minimize size={18} className="text-blue-500"/> : <Minimize size={18} className="text-neutral-200"/>}
-                </button>
-                </div>
+            </div>
 
-                <div className="flex justify-between items-center">
-                <label className="text-sm text-neutral-600">Animate Spawn (Grow)</label>
-                <button onClick={() => setSettings(s => ({...s, animateEnter: !s.animateEnter}))} className="text-neutral-400 hover:text-blue-500">
-                    {settings.animateEnter ? <Maximize size={18} className="text-blue-500"/> : <Maximize size={18} className="text-neutral-200"/>}
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Random Placement</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, randomBitePlacement: !s.randomBitePlacement}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.randomBitePlacement ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    <Shuffle size={16} />
                 </button>
-                </div>
+            </div>
 
-                <div className="flex justify-between items-center mt-2">
-                <label className="text-sm text-neutral-600">Base Color</label>
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Color Dominance</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, colorDominance: {...s.colorDominance, enabled: !s.colorDominance.enabled}}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.colorDominance.enabled ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    <Palette size={16} />
+                </button>
+            </div>
+            
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Animate Reset</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, animateExit: !s.animateExit}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.animateExit ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    <Minimize size={16} />
+                </button>
+            </div>
+
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Animate Spawn</label>
+                <button 
+                    onClick={() => setSettings(s => ({...s, animateEnter: !s.animateEnter}))} 
+                    className={`p-1.5 rounded-lg transition-colors ${settings.animateEnter ? 'bg-blue-50 text-blue-600' : 'text-neutral-400 hover:text-neutral-600'}`}
+                >
+                    <Maximize size={16} />
+                </button>
+            </div>
+
+            <div className="flex justify-between items-center py-1">
+                <label className="text-sm text-neutral-700">Base Color</label>
                 <div className="flex items-center gap-2">
-                        <input 
+                    <input 
                         type="color" 
                         value={mergedColors.base}
                         onChange={(e) => setSettings(s => ({...s, baseColor: e.target.value}))}
-                        className="w-6 h-6 rounded-full overflow-hidden cursor-pointer border-0 p-0"
-                        />
-                        {settings.baseColor && (
-                            <button onClick={() => setSettings(s => ({...s, baseColor: ''}))} className="text-neutral-400 hover:text-neutral-600">
-                                <RotateCcw size={14} />
-                            </button>
-                        )}
+                        className="w-7 h-7 rounded-lg overflow-hidden cursor-pointer border border-neutral-200"
+                    />
+                    {settings.baseColor && (
+                        <button 
+                            onClick={() => setSettings(s => ({...s, baseColor: ''}))} 
+                            className="p-1 text-neutral-400 hover:text-neutral-600 transition-colors"
+                        >
+                            <RotateCcw size={14} />
+                        </button>
+                    )}
                 </div>
-                </div>
+            </div>
         </div>
         
-            {/* JSON Output */}
-        <div className="pt-4 border-t border-neutral-100">
+        {/* JSON Output */}
+        <div className="pt-2 border-t border-neutral-100">
             <button 
                 onClick={() => setSettings(s => ({...s, showJSON: !s.showJSON}))}
-                className="w-full py-2 px-4 bg-neutral-50 hover:bg-neutral-100 text-neutral-600 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-700 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-colors border border-neutral-200"
             >
-                <Code size={16} />
+                <Code size={14} />
                 {settings.showJSON ? 'Hide JSON' : 'Show JSON'}
             </button>
             
             {settings.showJSON && (
-                <div className="mt-3 relative">
+                <div className="mt-2">
                     <textarea 
                         readOnly
-                        className="w-full h-48 bg-neutral-900 text-neutral-300 text-[10px] font-mono p-3 rounded-lg resize-none focus:outline-none"
+                        className="w-full h-48 bg-neutral-900 text-neutral-300 text-xs font-mono p-3 rounded-lg resize-none focus:outline-none border border-neutral-700"
                         value={JSON.stringify(jsonOutput, null, 2)}
                     />
                 </div>
             )}
         </div>
-
+        </div>
+      ) : null}
     </div>
   );
 };

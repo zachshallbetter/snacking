@@ -1,0 +1,13 @@
+node_modules
+.vite
+dist
+*.log
+.DS_Store
+App.tsx
+index.tsx
+index.html
+data/
+ref/
+*.config.ts
+vite.config.ts
+vite.config.lib.ts

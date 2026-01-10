@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useYumYum } from '../hooks/useYumYum';
 import Crumbs from './Crumbs';
 
+const GRID_CELL_SIZE = 10; // Match the hook's grid resolution
+
 interface YumItemProps {
   svgPath: string;
   viewBox: string;
@@ -22,20 +24,40 @@ interface YumItemProps {
     showNextBitePreview?: boolean;
     showStructurePreview?: boolean;
     showOnionSkin?: boolean;
+    showColorDominance?: boolean;
     resetDuration?: number;
     animateExit?: boolean;
     animateEnter?: boolean;
+    colorDominance?: {
+      enabled: boolean;
+      targetColor: string;
+      tolerance?: number;
+      strength?: number;
+    };
   };
+  onColorDominanceDetected?: (dominantColor: string, allColors?: Array<{ color: string, percentage: number }>) => void;
   children?: React.ReactNode; 
 }
 
-const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, config, children }) => {
-  const { bites, crumbs, isResetting, scale, triggerBite, updateCrumbs, isFinished, nextBite, structure } = useYumYum(config, svgPath, viewBox, colors.crumbs);
+export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, config, onColorDominanceDetected, children }) => {
+  const { bites, crumbs, isResetting, scale, triggerBite, updateCrumbs, isFinished, nextBite, structure, colorDominanceData } = useYumYum(config, svgPath, viewBox, colors.crumbs, colors.base);
+  
+  // All state hooks must be called before any effects
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isEntering, setIsEntering] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
   const wasResetting = useRef(isResetting);
+  
+  // Auto-set target color when dominant color is detected
+  useEffect(() => {
+    if (colorDominanceData && colorDominanceData.dominantColors.length > 0 && config.colorDominance?.enabled) {
+      const mostDominant = colorDominanceData.dominantColors[0].color;
+      if (onColorDominanceDetected) {
+        onColorDominanceDetected(mostDominant, colorDominanceData.dominantColors);
+      }
+    }
+  }, [colorDominanceData, config.colorDominance?.enabled, onColorDominanceDetected]);
 
   // Key ensures component remounts fully if path changes, resetting internal hook state cleanly
   const itemKey = svgPath.substring(0, 15); 
@@ -155,6 +177,24 @@ const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, config, chi
             {children}
         </g>
         
+        {/* Color Dominance Overlay - Shows all detected color regions */}
+        {config.showColorDominance && colorDominanceData && !isResetting && !isEntering && (
+            <g className="pointer-events-none">
+                {colorDominanceData.regions.map((region, regionIdx) => 
+                    region.points.map((pt, ptIdx) => (
+                        <circle 
+                            key={`cd-${regionIdx}-${ptIdx}`} 
+                            cx={pt.x} 
+                            cy={pt.y} 
+                            r={GRID_CELL_SIZE / 2} 
+                            fill={region.color} 
+                            opacity={0.3}
+                        />
+                    ))
+                )}
+            </g>
+        )}
+
         {/* Structure Overlay (Islands, Coastline, Tips) */}
         {config.showStructurePreview && !isFinished && !isResetting && (
             <g className="pointer-events-none">
