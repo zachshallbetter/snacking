@@ -1,0 +1,39 @@
+# Publish the Snacking demo to the zach-core archive — served at /p/snacking.
+# Authenticates with GitHub OIDC (no stored secrets). Fires on version tags.
+#
+# Before this works, set `core-url` below to the deployed zach-core origin and
+# make sure core has ARCHIVE_GITHUB_OWNER=zachshallbetter.
+name: Publish to Archive
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write          # required: lets the job request a GitHub OIDC token
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build          # produces ./dist (static demo)
+
+      - uses: zachshallbetter/zach-core/.github/actions/publish-to-archive@main
+        with:
+          core-url: https://CHANGE-ME.vercel.app   # ← set to deployed zach-core origin
+          slug: snacking
+          title: "Snacking Animation Library"
+          summary: "Interactive eating animations, loaders, and progress indicators for React."
+          tags: react,animation,svg,interactive
+          host: blob
+          dir: dist
+          entry: index.html
