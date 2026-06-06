@@ -14,6 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Cross-repo composite actions don't resolve from a user-owned PRIVATE repo
+      # via `uses: owner/repo@ref`, so check out the action repo locally instead.
+      - name: Fetch the publish action
+        uses: actions/checkout@v4
+        with:
+          repository: zachshallbetter/zach-core
+          path: .zach-core
+          token: ${{ secrets.ARCHIVE_ACTION_TOKEN || github.token }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -24,7 +33,7 @@ jobs:
           npm run build        # → dist/ (Vite, base './')
 
       - name: Publish to zach-core archive
-        uses: zachshallbetter/zach-core/.github/actions/publish-to-archive@main
+        uses: ./.zach-core/.github/actions/publish-to-archive
         with:
           core-url: https://zach-core.vercel.app
           slug: snacking
