@@ -1,0 +1,36 @@
+name: Publish to Archive
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write          # required: lets the job mint a GitHub OIDC token
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build
+        run: |
+          npm install
+          npm run build        # → dist/ (Vite, base './')
+
+      - name: Publish to zach-core archive
+        uses: zachshallbetter/zach-core/.github/actions/publish-to-archive@main
+        with:
+          core-url: https://zach-core.vercel.app
+          slug: snacking
+          title: "Cookie Cruncher"
+          summary: "A snack-clicker toy."
+          tags: game,react,toy
+          host: blob
+          dir: dist
+          entry: index.html
