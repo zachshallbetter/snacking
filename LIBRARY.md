@@ -5,7 +5,7 @@ This codebase is structured as a reusable library for eating animations and rela
 ## Structure
 
 ```
-snacking/
+yumyum/
 ├── lib/
 │   ├── index.ts          # Main library entry point
 │   └── vanilla/

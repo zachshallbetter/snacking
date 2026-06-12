@@ -1,8 +1,8 @@
-# Snacking Animation Library Documentation
+# YumYum Animation Library Documentation
 
-Welcome to the documentation for the Snacking Animation Library!
+Welcome to the documentation for the YumYum Animation Library!
 
-This library provides a set of React components and hooks for creating interactive eating animations, loaders, progress indicators, and more.
+This library provides framework-agnostic Vanilla JavaScript classes alongside React components and hooks for creating interactive eating animations, loaders, progress indicators, and more.
 
 ## Documentation Sections
 

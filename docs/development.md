@@ -1,6 +1,6 @@
 # Development
 
-This guide explains how to develop and build the Snacking Animation Library.
+This guide explains how to develop and build the YumYum Animation Library.
 
 ## Contributing
 
@@ -10,7 +10,7 @@ This guide explains how to develop and build the Snacking Animation Library.
     ```bash
     pnpm install
     ```
-4.  **Make changes** to components in `components/` or hooks in `hooks/`.
+4.  **Make changes** to components in `components/`, vanilla controllers in `lib/vanilla/`, or hooks in `hooks/`.
 5.  **Test** your changes using the demo application (see below).
 
 ## Running the Demo App
@@ -42,11 +42,9 @@ To build the demo application for deployment:
 pnpm build
 ```
 
-The build artifacts will be in the `dist/` directory.
+The build artifacts will be in the `dist-demo/` directory.
 
 ## Styling
 
-The library relies on **Tailwind CSS**.
+The library is **fully style-agnostic** and uses inline styles for layout structure. No Tailwind CSS config or style sheets are required for the library's core components.
 
-- If you are adding new components, try to use existing utility classes.
-- If you need custom styles, check `index.css` or consider if it should be a configurable prop.

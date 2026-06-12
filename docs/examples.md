@@ -3,7 +3,7 @@
 ## Basic YumItem
 
 ```tsx
-import { YumItem } from '@snacking/animation-library';
+import { YumItem } from '@yumyum/animation-library';
 
 function MyComponent() {
   return (
@@ -35,7 +35,7 @@ function MyComponent() {
 ## Custom Loader
 
 ```tsx
-import { Loader } from '@snacking/animation-library';
+import { Loader } from '@yumyum/animation-library';
 
 function CustomLoader() {
   return (
@@ -54,7 +54,7 @@ function CustomLoader() {
 
 ```tsx
 import { useState, useEffect } from 'react';
-import { ProgressBar } from '@snacking/animation-library';
+import { ProgressBar } from '@yumyum/animation-library';
 
 function FileUpload() {
   const [progress, setProgress] = useState(0);
@@ -83,7 +83,7 @@ function FileUpload() {
 ## Image Eater
 
 ```tsx
-import { ImageEater } from '@snacking/animation-library';
+import { ImageEater } from '@yumyum/animation-library';
 
 function AnimatedImage() {
   return (
@@ -114,7 +114,7 @@ function AnimatedImage() {
 ### Base64 Image Support
 
 ```tsx
-import { ImageEater } from '@snacking/animation-library';
+import { ImageEater } from '@yumyum/animation-library';
 
 function Base64ImageAnimation() {
   // Base64 encoded image (data URI)
@@ -131,7 +131,13 @@ function Base64ImageAnimation() {
         highlight: '#FFFFFF',
         crumbs: ['#EF4444', '#FEF3C7', '#F59E0B']
       }}
-      // ... same config as above
+      config={{
+        cx: 306.4,
+        cy: 313.45,
+        maxR: 310,
+        autoEat: true,
+        interval: 360
+      }}
     />
   );
 }
@@ -146,7 +152,7 @@ function Base64ImageAnimation() {
 ## Delete Animation
 
 ```tsx
-import { DeleteAnimation } from '@snacking/animation-library';
+import { DeleteAnimation } from '@yumyum/animation-library';
 
 function TodoItem({ item, onDelete }) {
   return (
@@ -156,7 +162,7 @@ function TodoItem({ item, onDelete }) {
       color="#EF4444"
       showCrumbs={true}
     >
-      <div className="p-4 bg-white rounded-lg shadow">
+      <div style={{ padding: '16px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
         <h3>{item.title}</h3>
         <p>{item.description}</p>
       </div>
@@ -168,7 +174,7 @@ function TodoItem({ item, onDelete }) {
 ## Using Hooks Directly
 
 ```tsx
-import { useYumYum } from '@snacking/animation-library';
+import { useYumYum } from '@yumyum/animation-library';
 
 function CustomEatingAnimation() {
   const config = {

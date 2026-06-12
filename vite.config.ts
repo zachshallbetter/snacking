@@ -3,8 +3,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  // GitHub Pages serves this repo at /snacking/
-  base: '/snacking/',
+  // GitHub Pages serves this repo at /yumyum/
+  base: '/yumyum/',
   server: {
     port: 3000,
     host: '0.0.0.0',
