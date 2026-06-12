@@ -44,19 +44,17 @@ export const DeleteAnimation: React.FC<DeleteAnimationProps> = ({
   };
 
   return (
-    <div className="relative">
+    <div style={{ position: 'relative' }}>
       <div
         ref={setContainerRef}
-        className="relative overflow-hidden"
-        style={{ borderRadius: 12 }}
+        style={{ position: 'relative', overflow: 'hidden', borderRadius: 12 }}
       >
         {/* Content with mask */}
-        <div className="relative">
+        <div style={{ position: 'relative' }}>
           <svg
             width={dimensions.width}
             height={dimensions.height}
-            className="absolute inset-0 pointer-events-none"
-            style={{ zIndex: 10 }}
+            style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none', zIndex: 10 }}
           >
             <defs>
               <mask id="deleteMask">
@@ -89,7 +87,7 @@ export const DeleteAnimation: React.FC<DeleteAnimationProps> = ({
         </div>
         
         {showCrumbs && isDeleting && crumbs.length > 0 && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none', overflow: 'hidden' }}>
             <Crumbs crumbs={crumbs} onUpdate={() => {}} gravity={0.3} drag={0.95} />
           </div>
         )}
@@ -98,7 +96,18 @@ export const DeleteAnimation: React.FC<DeleteAnimationProps> = ({
       {!isDeleting && (
         <button
           onClick={startDelete}
-          className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+          style={{
+            marginTop: '8px',
+            padding: '8px 16px',
+            backgroundColor: '#EF4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#DC2626' }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#EF4444' }}
         >
           Delete
         </button>

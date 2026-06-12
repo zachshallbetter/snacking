@@ -34,11 +34,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   }, [progress, animated, numericWidth]);
 
   return (
-    <div className="relative" style={{ width: numericWidth, height }}>
+    <div style={{ position: 'relative', width: numericWidth, height }}>
       {/* Background bar */}
       <div
-        className="absolute inset-0 rounded-full"
-        style={{ backgroundColor }}
+        style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, borderRadius: '9999px', backgroundColor }}
       />
       
       {/* Progress bar with eating effect */}
@@ -46,7 +45,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         width={numericWidth}
         height={height}
         viewBox={`0 0 ${numericWidth} ${height}`}
-        className="absolute inset-0"
+        style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
       >
         <defs>
           <rect id="progressBarBody" x="0" y={height * 0.2} width={numericWidth} height={height * 0.6} rx={height * 0.3} />
@@ -81,7 +80,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       </svg>
       
       {showCrumbs && animated && crumbs.length > 0 && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none', overflow: 'hidden' }}>
           <Crumbs crumbs={crumbs} onUpdate={() => {}} gravity={0.2} drag={0.96} />
         </div>
       )}

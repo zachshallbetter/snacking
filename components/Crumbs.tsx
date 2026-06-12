@@ -48,8 +48,8 @@ export const Crumbs: React.FC<CrumbsProps> = ({ crumbs, onUpdate, gravity = 0.2,
   }, [crumbs, gravity, drag]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <svg className="w-full h-full" viewBox="0 0 479.3 481.2" preserveAspectRatio="xMidYMid meet">
+    <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+      <svg style={{ width: '100%', height: '100%' }} viewBox="0 0 479.3 481.2" preserveAspectRatio="xMidYMid meet">
         {crumbs.map(crumb => {
             const opacity = Math.min(1, crumb.life);
             

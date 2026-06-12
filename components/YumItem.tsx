@@ -124,9 +124,26 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
   // Estimate bite radius for visualization
   const estimatedBiteR = (50 * (config.maxR / 240)) * (config.biteSizeScale || 1);
 
+  const containerStyle: React.CSSProperties = {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+    cursor: 'none',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    touchAction: 'manipulation'
+  };
+
+  const svgStyle: React.CSSProperties = {
+    ...transitionStyle,
+    width: '100%',
+    height: '100%',
+    filter: 'drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15))'
+  };
+
   return (
     <div 
-      className="relative w-full h-full cursor-none select-none touch-manipulation group" 
+      style={containerStyle}
       onClick={handleManualBite}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -136,8 +153,7 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
         key={itemKey}
         xmlns="http://www.w3.org/2000/svg"
         viewBox={viewBox}
-        className="w-full h-full drop-shadow-2xl"
-        style={transitionStyle}
+        style={svgStyle}
         onMouseMove={handleMouseMove}
       >
         <defs>
@@ -167,7 +183,7 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
                 stroke={colors.base} 
                 strokeWidth="2" 
                 strokeDasharray="6,6"
-                className="pointer-events-none"
+                style={{ pointerEvents: 'none' }}
              />
         )}
 
@@ -179,7 +195,7 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
         
         {/* Color Dominance Overlay - Shows all detected color regions */}
         {config.showColorDominance && colorDominanceData && !isResetting && !isEntering && (
-            <g className="pointer-events-none">
+            <g style={{ pointerEvents: 'none' }}>
                 {colorDominanceData.regions.map((region, regionIdx) => 
                     region.points.map((pt, ptIdx) => (
                         <circle 
@@ -197,7 +213,7 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
 
         {/* Structure Overlay (Islands, Coastline, Tips) */}
         {config.showStructurePreview && !isFinished && !isResetting && (
-            <g className="pointer-events-none">
+            <g style={{ pointerEvents: 'none' }}>
                 {/* Coastline (Edges) - Cyan */}
                 {structure.perimeter.map((pt, i) => (
                     <circle key={`p-${i}`} cx={pt.x} cy={pt.y} r={2} fill="#06B6D4" opacity={0.6} />
@@ -219,7 +235,7 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
         {nextBite && !isFinished && !isResetting && config.showNextBitePreview && (
              <g 
                 transform={`translate(${nextBite.x}, ${nextBite.y}) rotate(${nextBite.rotation})`} 
-                className="opacity-60 pointer-events-none transition-transform duration-300"
+                style={{ opacity: 0.6, pointerEvents: 'none', transition: 'transform 300ms' }}
              >
                 {/* Dotted Outline */}
                 <path 
@@ -240,7 +256,7 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
                     markerEnd="url(#arrowHead)" 
                 />
              </g>
-        )}
+         )}
 
         {/* Debug Cursor */}
         {!isFinished && isHovering && config.showDebug && (
@@ -252,13 +268,12 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
              stroke="white" 
              strokeWidth="2" 
              strokeDasharray="5,5"
-             className="opacity-40 group-hover:opacity-80 transition-opacity duration-200"
-             style={{ pointerEvents: 'none' }}
+             style={{ opacity: isHovering ? 0.8 : 0.4, transition: 'opacity 200ms', pointerEvents: 'none' }}
            />
         )}
       </svg>
 
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
+      <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
          <Crumbs 
             crumbs={crumbs} 
             onUpdate={updateCrumbs} 

@@ -27,12 +27,12 @@ export const ProgressCircle: React.FC<ProgressCircleProps> = ({
   });
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
+    <div style={{ position: 'relative', width: size, height: size }}>
       <svg
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        className="transform -rotate-90"
+        style={{ transform: 'rotate(-90deg)' }}
       >
         <defs>
           <circle id="progressCircleBg" cx={size/2} cy={size/2} r={radius} fill="none" stroke={backgroundColor} strokeWidth={strokeWidth} />
@@ -74,7 +74,7 @@ export const ProgressCircle: React.FC<ProgressCircleProps> = ({
       </svg>
       
       {showCrumbs && animated && crumbs.length > 0 && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none', overflow: 'hidden' }}>
           <Crumbs crumbs={crumbs} onUpdate={() => {}} gravity={0.2} drag={0.96} />
         </div>
       )}

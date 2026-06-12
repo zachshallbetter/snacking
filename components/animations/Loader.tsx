@@ -27,12 +27,12 @@ export const Loader: React.FC<LoaderProps> = ({
   });
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
+    <div style={{ position: 'relative', width: size, height: size }}>
       <svg
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        className="drop-shadow-lg"
+        style={{ filter: 'drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1))' }}
       >
         <defs>
           <path id="loaderBody" d={`M ${size/2} ${size/2} m -${size/2 - 10} 0 a ${size/2 - 10} ${size/2 - 10} 0 1 0 ${size - 20} 0 a ${size/2 - 10} ${size/2 - 10} 0 1 0 -${size - 20} 0`} />
@@ -55,7 +55,7 @@ export const Loader: React.FC<LoaderProps> = ({
       </svg>
       
       {showCrumbs && crumbs.length > 0 && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none', overflow: 'hidden' }}>
           <Crumbs crumbs={crumbs} onUpdate={() => {}} gravity={0.2} drag={0.96} />
         </div>
       )}

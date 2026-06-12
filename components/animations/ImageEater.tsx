@@ -99,9 +99,26 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
   const vbWidth = vb[2] || 612.8;
   const vbHeight = vb[3] || 626.9;
 
+  const containerStyle: React.CSSProperties = {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+    cursor: 'none',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    touchAction: 'manipulation'
+  };
+
+  const svgStyle: React.CSSProperties = {
+    ...transitionStyle,
+    width: '100%',
+    height: '100%',
+    filter: 'drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15))'
+  };
+
   return (
     <div 
-      className="relative w-full h-full cursor-none select-none touch-manipulation group" 
+      style={containerStyle}
       onClick={handleManualBite}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -111,8 +128,7 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
         key={itemKey}
         xmlns="http://www.w3.org/2000/svg"
         viewBox={viewBox}
-        className="w-full h-full drop-shadow-2xl"
-        style={transitionStyle}
+        style={svgStyle}
         onMouseMove={handleMouseMove}
       >
         <defs>
@@ -153,7 +169,7 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
             stroke={colors.base} 
             strokeWidth="2" 
             strokeDasharray="6,6"
-            className="pointer-events-none"
+            style={{ pointerEvents: 'none' }}
           />
         )}
 
@@ -176,7 +192,7 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
         
         {/* Color Dominance Overlay - Shows all detected color regions */}
         {config.showColorDominance && colorDominanceData && !isResetting && !isEntering && (
-          <g className="pointer-events-none">
+          <g style={{ pointerEvents: 'none' }}>
             {colorDominanceData.regions.map((region, regionIdx) => 
               region.points.map((pt, ptIdx) => (
                 <circle 
@@ -194,7 +210,7 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
         
         {/* Structure Overlay (Islands, Coastline, Tips) */}
         {config.showStructurePreview && !isFinished && !isResetting && (
-          <g className="pointer-events-none">
+          <g style={{ pointerEvents: 'none' }}>
             {structure.perimeter.map((pt, i) => (
               <circle key={`p-${i}`} cx={pt.x} cy={pt.y} r={2} fill="#06B6D4" opacity={0.6} />
             ))}
@@ -211,7 +227,7 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
         {nextBite && !isFinished && !isResetting && config.showNextBitePreview && (
           <g 
             transform={`translate(${nextBite.x}, ${nextBite.y}) rotate(${nextBite.rotation})`} 
-            className="opacity-60 pointer-events-none transition-transform duration-300"
+            style={{ opacity: 0.6, pointerEvents: 'none', transition: 'transform 300ms' }}
           >
             <path 
               d={nextBite.path} 
@@ -241,8 +257,7 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
             stroke="white" 
             strokeWidth="2" 
             strokeDasharray="5,5"
-            className="opacity-40 group-hover:opacity-80 transition-opacity duration-200"
-            style={{ pointerEvents: 'none' }}
+            style={{ opacity: isHovering ? 0.8 : 0.4, transition: 'opacity 200ms', pointerEvents: 'none' }}
           />
         )}
       </svg>
@@ -251,11 +266,11 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
       <img
         src={src}
         alt=""
-        className="hidden"
+        style={{ display: 'none' }}
         onLoad={() => setImageLoaded(true)}
       />
 
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
+      <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
         <Crumbs 
           crumbs={crumbs} 
           onUpdate={updateCrumbs} 
