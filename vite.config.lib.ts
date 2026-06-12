@@ -15,8 +15,8 @@ export default defineConfig({
     outDir: 'dist',
     lib: {
       entry: path.resolve(__dirname, 'lib/index.ts'),
-      name: 'SnackingAnimationLibrary',
-      fileName: (format) => `snacking-animation-library.${format}.js`,
+      name: 'YumYumAnimationLibrary',
+      fileName: (format) => `yumyum-animation-library.${format}.js`,
       formats: ['es', 'cjs'],
     },
     rollupOptions: {

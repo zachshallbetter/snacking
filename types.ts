@@ -49,6 +49,7 @@ export interface YumConfig {
   showStructurePreview?: boolean; // Toggle structure (islands/perimeter) view
   showOnionSkin?: boolean; // Toggle onion skin of original shape
   showColorDominance?: boolean; // Toggle color dominance visualization
+  showCrumbs?: boolean; // Toggle crumb particles visibility
   resetDuration?: number; // ms to shrink/reset
   animateExit?: boolean; // Toggle shrink animation on reset
   animateEnter?: boolean; // Toggle grow animation on spawn

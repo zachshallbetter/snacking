@@ -1,16 +1,16 @@
 {
-  "name": "@snacking/animation-library",
+  "name": "@yumyum/animation-library",
   "version": "1.0.0",
-  "description": "A React library for creating interactive eating animations, loaders, progress indicators, and delete animations",
+  "description": "A framework-agnostic library for creating interactive eating animations, loaders, progress indicators, and delete animations",
   "type": "module",
-  "main": "./dist/snacking-animation-library.cjs.js",
-  "module": "./dist/snacking-animation-library.es.js",
-  "types": "./dist/snacking-animation-library.d.ts",
+  "main": "./dist/yumyum-animation-library.cjs.js",
+  "module": "./dist/yumyum-animation-library.es.js",
+  "types": "./dist/yumyum-animation-library.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/snacking-animation-library.d.ts",
-      "import": "./dist/snacking-animation-library.es.js",
-      "require": "./dist/snacking-animation-library.cjs.js"
+      "types": "./dist/yumyum-animation-library.d.ts",
+      "import": "./dist/yumyum-animation-library.es.js",
+      "require": "./dist/yumyum-animation-library.cjs.js"
     }
   },
   "files": [
@@ -30,7 +30,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/snacking-animation-library"
+    "url": "https://github.com/zachshallbetter/snacking.git"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

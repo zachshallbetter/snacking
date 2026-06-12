@@ -1,12 +1,12 @@
 /**
- * Snacking Animation Library
+ * YumYum Animation Library
  * 
  * A library for creating eating animations, loaders, progress indicators,
  * and delete animations with customizable physics and visual effects.
  * 
  * @example
  * ```tsx
- * import { YumItem } from '@snacking/animation-library';
+ * import { YumItem } from '@yumyum/animation-library';
  * 
  * <YumItem
  *   svgPath="M100,100 L200,100 L200,200 L100,200 Z"
@@ -50,3 +50,6 @@ export type {
 
 // Utilities
 export { initAudio, playCrunchSound, playPopSound } from '../utils/audio';
+
+// Vanilla Controller
+export { YumEater, type YumEaterColors, type YumEaterOptions } from './vanilla/YumEater';

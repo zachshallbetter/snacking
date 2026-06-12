@@ -1,11 +1,17 @@
 # Usage Examples
 
-## Basic YumItem
+The `@yumyum/animation-library` supports both React and Vanilla JS integrations out-of-the-box with zero configuration or style sheets required.
+
+---
+
+## React Examples
+
+### Basic YumItem
 
 ```tsx
-import { YumItem } from '@snacking/animation-library';
+import { YumItem } from '@yumyum/animation-library';
 
-function MyComponent() {
+function CookieExample() {
   return (
     <YumItem
       svgPath="M477.8,241.1c-19.5-123.7..."
@@ -32,10 +38,10 @@ function MyComponent() {
 }
 ```
 
-## Custom Loader
+### Custom Loader
 
 ```tsx
-import { Loader } from '@snacking/animation-library';
+import { Loader } from '@yumyum/animation-library';
 
 function CustomLoader() {
   return (
@@ -50,11 +56,11 @@ function CustomLoader() {
 }
 ```
 
-## Progress Bar with State
+### Progress Bar with State
 
 ```tsx
 import { useState, useEffect } from 'react';
-import { ProgressBar } from '@snacking/animation-library';
+import { ProgressBar } from '@yumyum/animation-library';
 
 function FileUpload() {
   const [progress, setProgress] = useState(0);
@@ -80,10 +86,10 @@ function FileUpload() {
 }
 ```
 
-## Image Eater
+### Image Eater
 
 ```tsx
-import { ImageEater } from '@snacking/animation-library';
+import { ImageEater } from '@yumyum/animation-library';
 
 function AnimatedImage() {
   return (
@@ -111,48 +117,10 @@ function AnimatedImage() {
 }
 ```
 
-### Base64 Image Support
+### Delete Animation
 
 ```tsx
-import { ImageEater } from '@snacking/animation-library';
-
-function Base64ImageAnimation() {
-  // Base64 encoded image (data URI)
-  const base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...";
-  
-  return (
-    <ImageEater
-      src={base64Image}
-      maskPath="M250.9,3.7c-.4,2.6..."
-      viewBox="0 0 612.8 626.9"
-      colors={{
-        base: '#F59E0B',
-        shadow: '#B45309',
-        highlight: '#FFFFFF',
-        crumbs: ['#EF4444', '#FEF3C7', '#F59E0B']
-      }}
-      config={{
-        cx: 306.4,
-        cy: 313.45,
-        maxR: 310,
-        autoEat: true,
-        interval: 360
-      }}
-    />
-  );
-}
-```
-
-**Benefits of base64 images:**
-- No CORS restrictions
-- Works offline
-- Embedded directly in code/bundles
-- Faster for small images (no network request)
-
-## Delete Animation
-
-```tsx
-import { DeleteAnimation } from '@snacking/animation-library';
+import { DeleteAnimation } from '@yumyum/animation-library';
 
 function TodoItem({ item, onDelete }) {
   return (
@@ -162,7 +130,7 @@ function TodoItem({ item, onDelete }) {
       color="#EF4444"
       showCrumbs={true}
     >
-      <div className="p-4 bg-white rounded-lg shadow">
+      <div style={{ padding: '16px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
         <h3>{item.title}</h3>
         <p>{item.description}</p>
       </div>
@@ -171,57 +139,91 @@ function TodoItem({ item, onDelete }) {
 }
 ```
 
-## Using Hooks Directly
+---
 
-```tsx
-import { useYumYum } from '@snacking/animation-library';
+## Vanilla JavaScript Examples
 
-function CustomEatingAnimation() {
-  const config = {
-    cx: 200,
-    cy: 200,
-    maxR: 180,
-    autoEat: true,
-    interval: 300
-  };
+### Basic Shape Eating
 
-  const {
-    bites,
-    crumbs,
-    triggerBite,
-    isFinished,
-    nextBite
-  } = useYumYum(
-    config,
-    "M100,100 L300,100 L300,300 L100,300 Z",
-    "0 0 400 400",
-    ['#FF4785', '#FFFFFF']
-  );
+```html
+<div id="snack-container" style="width: 400px; height: 400px; margin: auto;"></div>
 
-  return (
-    <div>
-      {/* Custom rendering using bites and crumbs */}
-      <svg viewBox="0 0 400 400">
-        {bites.map(bite => (
-          <path
-            key={bite.id}
-            d={bite.path}
-            transform={`translate(${bite.x}, ${bite.y}) rotate(${bite.rotation})`}
-            fill="black"
-          />
-        ))}
-      </svg>
-    </div>
-  );
-}
+<script type="module">
+  import { YumEater } from '@yumyum/animation-library';
+
+  const container = document.getElementById('snack-container');
+  
+  const eater = new YumEater(container, {
+    svgPath: "M477.8,241.1c-19.5-123.7...",
+    viewBox: "0 0 480 480",
+    colors: {
+      base: '#FF4785',
+      shadow: '#9F1239',
+      highlight: '#FFFFFF',
+      crumbs: ['#FFFFFF', '#FF4785']
+    },
+    config: {
+      cx: 240,
+      cy: 240,
+      maxR: 245,
+      autoEat: true,
+      interval: 300,
+      showDebug: true
+    }
+  });
+
+  // Manually trigger a bite or reset
+  // eater.triggerBite({ x: 200, y: 150 });
+  // eater.reset();
+</script>
 ```
 
-## Styling Considerations
+### Image Eating
 
-This library uses Tailwind CSS classes. To use it in a project without Tailwind:
+```html
+<div id="image-container" style="width: 400px; height: 400px;"></div>
 
-1. Install Tailwind CSS in your project
-2. Or use a CSS-in-JS solution and override styles
-3. Or fork and replace Tailwind classes with your preferred styling
+<script type="module">
+  import { YumEater } from '@yumyum/animation-library';
 
-The library is designed to be flexible and work with various styling approaches.
+  const container = document.getElementById('image-container');
+  
+  const eater = new YumEater(container, {
+    imageSrc: "/path/to/picture.jpg",
+    svgPath: "M250.9,3.7c-.4,2.6...",
+    viewBox: "0 0 612.8 626.9",
+    colors: {
+      base: '#F59E0B',
+      shadow: '#B45309',
+      highlight: '#FFFFFF',
+      crumbs: ['#EF4444', '#FEF3C7', '#F59E0B']
+    },
+    config: {
+      cx: 306.4,
+      cy: 313.45,
+      maxR: 310,
+      autoEat: true,
+      interval: 360,
+      colorDominance: {
+        enabled: true,
+        targetColor: '#F59E0B'
+      }
+    }
+  });
+</script>
+```
+
+### Controlling Instantiated Instances
+
+You can dynamically change parameters or fully clean up instances when no longer needed:
+
+```javascript
+// Toggle auto eating
+eater.setConfig({ autoEat: false });
+
+// Update color dynamically
+eater.setColors({ base: '#00FF00' });
+
+// Clean up listeners and DOM elements
+eater.destroy();
+```
