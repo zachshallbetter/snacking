@@ -5,11 +5,11 @@
 To install the YumYum Animation Library in your project, run:
 
 ```bash
-npm install @yumyum/animation-library
+npm install @snackstudio/yumyum
 # or
-pnpm add @yumyum/animation-library
+pnpm add @snackstudio/yumyum
 # or
-yarn add @yumyum/animation-library
+yarn add @snackstudio/yumyum
 ```
 
 ## Quick Start
@@ -19,7 +19,7 @@ yarn add @yumyum/animation-library
 Here is a simple example of how to use the `YumItem` component:
 
 ```tsx
-import { YumItem } from '@yumyum/animation-library';
+import { YumItem } from '@snackstudio/yumyum';
 
 function App() {
   return (
@@ -52,7 +52,7 @@ Use the native class wrapper directly in raw HTML or modules:
 <div id="snack-box" style="width: 300px; height: 300px;"></div>
 
 <script type="module">
-  import { YumEater } from '@yumyum/animation-library';
+  import { YumEater } from '@snackstudio/yumyum';
 
   const container = document.getElementById('snack-box');
   const eater = new YumEater(container, {

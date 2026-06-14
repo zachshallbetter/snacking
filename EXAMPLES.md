@@ -1,6 +1,6 @@
 # Usage Examples
 
-The `@yumyum/animation-library` supports both React and Vanilla JS integrations out-of-the-box with zero configuration or style sheets required.
+The `@snackstudio/yumyum` supports both React and Vanilla JS integrations out-of-the-box with zero configuration or style sheets required.
 
 ---
 
@@ -9,7 +9,7 @@ The `@yumyum/animation-library` supports both React and Vanilla JS integrations 
 ### Basic YumItem
 
 ```tsx
-import { YumItem } from '@yumyum/animation-library';
+import { YumItem } from '@snackstudio/yumyum';
 
 function CookieExample() {
   return (
@@ -41,7 +41,7 @@ function CookieExample() {
 ### Custom Loader
 
 ```tsx
-import { Loader } from '@yumyum/animation-library';
+import { Loader } from '@snackstudio/yumyum';
 
 function CustomLoader() {
   return (
@@ -60,7 +60,7 @@ function CustomLoader() {
 
 ```tsx
 import { useState, useEffect } from 'react';
-import { ProgressBar } from '@yumyum/animation-library';
+import { ProgressBar } from '@snackstudio/yumyum';
 
 function FileUpload() {
   const [progress, setProgress] = useState(0);
@@ -89,7 +89,7 @@ function FileUpload() {
 ### Image Eater
 
 ```tsx
-import { ImageEater } from '@yumyum/animation-library';
+import { ImageEater } from '@snackstudio/yumyum';
 
 function AnimatedImage() {
   return (
@@ -120,7 +120,7 @@ function AnimatedImage() {
 ### Delete Animation
 
 ```tsx
-import { DeleteAnimation } from '@yumyum/animation-library';
+import { DeleteAnimation } from '@snackstudio/yumyum';
 
 function TodoItem({ item, onDelete }) {
   return (
@@ -149,7 +149,7 @@ function TodoItem({ item, onDelete }) {
 <div id="snack-container" style="width: 400px; height: 400px; margin: auto;"></div>
 
 <script type="module">
-  import { YumEater } from '@yumyum/animation-library';
+  import { YumEater } from '@snackstudio/yumyum';
 
   const container = document.getElementById('snack-container');
   
@@ -184,7 +184,7 @@ function TodoItem({ item, onDelete }) {
 <div id="image-container" style="width: 400px; height: 400px;"></div>
 
 <script type="module">
-  import { YumEater } from '@yumyum/animation-library';
+  import { YumEater } from '@snackstudio/yumyum';
 
   const container = document.getElementById('image-container');
   

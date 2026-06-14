@@ -3,7 +3,7 @@
 ## Basic YumItem
 
 ```tsx
-import { YumItem } from '@yumyum/animation-library';
+import { YumItem } from '@snackstudio/yumyum';
 
 function MyComponent() {
   return (
@@ -35,7 +35,7 @@ function MyComponent() {
 ## Custom Loader
 
 ```tsx
-import { Loader } from '@yumyum/animation-library';
+import { Loader } from '@snackstudio/yumyum';
 
 function CustomLoader() {
   return (
@@ -54,7 +54,7 @@ function CustomLoader() {
 
 ```tsx
 import { useState, useEffect } from 'react';
-import { ProgressBar } from '@yumyum/animation-library';
+import { ProgressBar } from '@snackstudio/yumyum';
 
 function FileUpload() {
   const [progress, setProgress] = useState(0);
@@ -83,7 +83,7 @@ function FileUpload() {
 ## Image Eater
 
 ```tsx
-import { ImageEater } from '@yumyum/animation-library';
+import { ImageEater } from '@snackstudio/yumyum';
 
 function AnimatedImage() {
   return (
@@ -114,7 +114,7 @@ function AnimatedImage() {
 ### Base64 Image Support
 
 ```tsx
-import { ImageEater } from '@yumyum/animation-library';
+import { ImageEater } from '@snackstudio/yumyum';
 
 function Base64ImageAnimation() {
   // Base64 encoded image (data URI)
@@ -152,7 +152,7 @@ function Base64ImageAnimation() {
 ## Delete Animation
 
 ```tsx
-import { DeleteAnimation } from '@yumyum/animation-library';
+import { DeleteAnimation } from '@snackstudio/yumyum';
 
 function TodoItem({ item, onDelete }) {
   return (
@@ -174,7 +174,7 @@ function TodoItem({ item, onDelete }) {
 ## Using Hooks Directly
 
 ```tsx
-import { useYumYum } from '@yumyum/animation-library';
+import { useYumYum } from '@snackstudio/yumyum';
 
 function CustomEatingAnimation() {
   const config = {

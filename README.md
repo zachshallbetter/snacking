@@ -17,7 +17,7 @@ For complete usage instructions and API details, see the [documentation](docs/in
 ## Installation
 
 ```bash
-npm install @yumyum/animation-library
+npm install @snackstudio/yumyum
 ```
 
 ## Quick Start
@@ -25,14 +25,26 @@ npm install @yumyum/animation-library
 ### React
 
 ```tsx
-import { YumItem } from '@yumyum/animation-library';
+import { YumItem } from '@snackstudio/yumyum';
 
 function App() {
   return (
     <YumItem
-      svgPath="M100..."
-      viewBox="0 0 200 200"
-      colors={{ base: '#FF4785', shadow: '#D6336C', highlight: '#FFFFFF', crumbs: ['#FF4785'] }}
+      svgPath="M100,100 L200,100 L200,200 L100,200 Z"
+      viewBox="0 0 300 300"
+      colors={{
+        base: '#FF4785',
+        shadow: '#D6336C',
+        highlight: '#FFFFFF',
+        crumbs: ['#FF4785', '#D6336C']
+      }}
+      config={{
+        cx: 150,
+        cy: 150,
+        maxR: 100,
+        autoEat: true,
+        interval: 200
+      }}
     />
   );
 }
@@ -44,12 +56,12 @@ function App() {
 <div id="cookie-container" style="width: 300px; height: 300px;"></div>
 
 <script type="module">
-  import { YumEater } from '@yumyum/animation-library';
+  import { YumEater } from '@snackstudio/yumyum';
 
   const container = document.getElementById('cookie-container');
   const eater = new YumEater(container, {
-    svgPath: "M100...",
-    viewBox: "0 0 200 200",
+    svgPath: "M100,100 L200,100 L200,200 L100,200 Z",
+    viewBox: "0 0 300 300",
     colors: {
       base: '#FF4785',
       shadow: '#D6336C',
@@ -57,14 +69,32 @@ function App() {
       crumbs: ['#FF4785']
     },
     config: {
-      cx: 100,
-      cy: 100,
-      maxR: 90,
+      cx: 150,
+      cy: 150,
+      maxR: 100,
       autoEat: true
     }
   });
+
+  // Clean up when done
+  // eater.destroy();
 </script>
 ```
+
+### Key Config Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `cx`, `cy` | `number` | — | Center coordinates of the shape |
+| `maxR` | `number` | — | Visual boundary radius |
+| `autoEat` | `boolean` | `true` | Toggle automatic eating |
+| `interval` | `number` | `200` | Auto-eat interval in ms |
+| `biteSizeScale` | `number` | `1` | Multiplier for bite size |
+| `biteRoundness` | `number` | `0.9` | 0 (jagged) to 1 (smooth) |
+| `gravity` | `number` | `0.2` | Crumb downward force |
+| `drag` | `number` | `0.96` | Crumb air resistance |
+| `drillInBias` | `number` | `0.2` | 0 (peel) to 1 (drill) |
+| `resetDuration` | `number` | `800` | Reset animation duration in ms |
 
 For more examples, refer to the [examples guide](docs/examples.md) or the [API reference](docs/api-reference.md).
 

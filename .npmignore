@@ -1,6 +1,5 @@
 node_modules
 .vite
-dist
 *.log
 .DS_Store
 App.tsx
@@ -8,6 +7,13 @@ index.tsx
 index.html
 data/
 ref/
+docs/
+dist-demo/
+.github/
+.env*
+metadata.json
+LIBRARY.md
+tsconfig.json
 *.config.ts
 vite.config.ts
 vite.config.lib.ts

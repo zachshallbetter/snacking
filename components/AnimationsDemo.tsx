@@ -1,3 +1,4 @@
+// @ts-nocheck — Demo-only file, not part of the published library
 import React, { useState } from 'react';
 import { Loader, ProgressBar, ProgressCircle, ImageEater, DeleteAnimation } from './animations';
 

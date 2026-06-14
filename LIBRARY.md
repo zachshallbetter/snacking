@@ -24,7 +24,7 @@ yumyum/
 ## Installation
 
 ```bash
-npm install @yumyum/animation-library
+npm install @snackstudio/yumyum
 ```
 
 ---
@@ -34,7 +34,7 @@ npm install @yumyum/animation-library
 ### Basic Usage
 
 ```tsx
-import { YumItem, Loader, ProgressBar, ImageEater } from '@yumyum/animation-library';
+import { YumItem, Loader, ProgressBar, ImageEater } from '@snackstudio/yumyum';
 
 function App() {
   return (
@@ -52,7 +52,7 @@ function App() {
 For custom React rendering pipelines, you can import and use the hooks directly:
 
 ```tsx
-import { useYumYum } from '@yumyum/animation-library';
+import { useYumYum } from '@snackstudio/yumyum';
 
 function CustomComponent() {
   const { bites, crumbs, triggerBite } = useYumYum(config, path, viewBox, colors.crumbs);
@@ -70,7 +70,7 @@ The library exposes a native `YumEater` controller class which directly manages 
 ### Basic Usage
 
 ```javascript
-import { YumEater } from '@yumyum/animation-library';
+import { YumEater } from '@snackstudio/yumyum';
 
 const container = document.getElementById('cookie-container');
 

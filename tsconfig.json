@@ -26,6 +26,18 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
+  "include": [
+    "lib/**/*",
+    "components/**/*",
+    "hooks/**/*",
+    "utils/**/*",
+    "data/**/*",
+    "types.ts",
+    "App.tsx",
+    "index.tsx",
+    "vite.config.ts",
+    "vite.config.lib.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",

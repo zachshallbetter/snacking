@@ -1,23 +1,25 @@
 {
-  "name": "@yumyum/animation-library",
+  "name": "@snackstudio/yumyum",
   "version": "1.0.0",
   "description": "A framework-agnostic library for creating interactive eating animations, loaders, progress indicators, and delete animations",
   "type": "module",
-  "main": "./dist/yumyum-animation-library.cjs.js",
-  "module": "./dist/yumyum-animation-library.es.js",
-  "types": "./dist/yumyum-animation-library.d.ts",
+  "main": "./dist/snackstudio-yumyum.cjs.js",
+  "module": "./dist/snackstudio-yumyum.es.js",
+  "types": "./dist/snackstudio-yumyum.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/yumyum-animation-library.d.ts",
-      "import": "./dist/yumyum-animation-library.es.js",
-      "require": "./dist/yumyum-animation-library.cjs.js"
+      "types": "./dist/snackstudio-yumyum.d.ts",
+      "import": "./dist/snackstudio-yumyum.es.js",
+      "require": "./dist/snackstudio-yumyum.cjs.js"
     }
   },
   "files": [
     "dist",
     "README.md",
-    "EXAMPLES.md"
+    "EXAMPLES.md",
+    "LICENSE"
   ],
+  "sideEffects": false,
   "keywords": [
     "react",
     "animation",
@@ -28,6 +30,12 @@
     "svg",
     "particles"
   ],
+  "author": "Snack Studio",
+  "license": "MIT",
+  "homepage": "https://github.com/zachshallbetter/yumyum#readme",
+  "bugs": {
+    "url": "https://github.com/zachshallbetter/yumyum/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/zachshallbetter/yumyum.git"
@@ -36,6 +44,10 @@
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "react-dom": { "optional": true }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -43,13 +55,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.0",
+    "lucide-react": "^0.562.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-dts": "^5.0.2"

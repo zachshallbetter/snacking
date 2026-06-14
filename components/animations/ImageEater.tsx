@@ -6,7 +6,7 @@ import { isDataURI } from '../../utils/image';
 
 const GRID_CELL_SIZE = 10; // Match the hook's grid resolution
 
-export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?: (dominantColor: string) => void }> = ({
+export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?: (dominantColor: string, allColors?: Array<{ color: string, percentage: number }>) => void }> = ({
   src,
   maskPath,
   viewBox,
@@ -273,7 +273,8 @@ export const ImageEater: React.FC<ImageEaterProps & { onColorDominanceDetected?:
       <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
         <Crumbs 
           crumbs={crumbs} 
-          onUpdate={updateCrumbs} 
+          onUpdate={updateCrumbs}
+          viewBox={viewBox}
           gravity={config.gravity || 0.2} 
           drag={config.drag || 0.96} 
         />

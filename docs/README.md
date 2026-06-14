@@ -83,7 +83,7 @@ graph TD
 ## Installation
 
 ```bash
-npm install @yumyum/animation-library
+npm install @snackstudio/yumyum
 ```
 
 ## Quick Start
@@ -91,7 +91,7 @@ npm install @yumyum/animation-library
 ### React
 
 ```tsx
-import { YumItem } from '@yumyum/animation-library';
+import { YumItem } from '@snackstudio/yumyum';
 
 function App() {
   return (
@@ -121,7 +121,7 @@ function App() {
 <div id="cookie-box" style="width: 300px; height: 300px;"></div>
 
 <script type="module">
-  import { YumEater } from '@yumyum/animation-library';
+  import { YumEater } from '@snackstudio/yumyum';
 
   const container = document.getElementById('cookie-box');
   const eater = new YumEater(container, {

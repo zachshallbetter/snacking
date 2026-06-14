@@ -1,8 +1,14 @@
+/**
+ * YumItem — Core eating animation component for SVG paths.
+ *
+ * Renders an SVG shape that is progressively "eaten" with realistic
+ * bite patterns, crumb particles, and structural analysis overlays.
+ */
 import React, { useState, useRef, useEffect } from 'react';
 import { useYumYum } from '../hooks/useYumYum';
 import Crumbs from './Crumbs';
 
-const GRID_CELL_SIZE = 10; // Match the hook's grid resolution
+const GRID_CELL_SIZE = 10;
 
 interface YumItemProps {
   svgPath: string;
@@ -276,7 +282,8 @@ export const YumItem: React.FC<YumItemProps> = ({ svgPath, viewBox, colors, conf
       <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
          <Crumbs 
             crumbs={crumbs} 
-            onUpdate={updateCrumbs} 
+            onUpdate={updateCrumbs}
+            viewBox={viewBox}
             gravity={config.gravity} 
             drag={config.drag} 
          />
